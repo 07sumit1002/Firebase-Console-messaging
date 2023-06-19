@@ -7,17 +7,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
 </head>
-<div class="container">
-    <div>Notification data will receive here if the app is open, and focused</div>
-    <div class="message" style="min-height: 80px;"></div>
-    <!-- <div>Device Token:</div> -->
-</div>
 
 <body>
+    <div class="message" style="min-height: 80px;">
+        <!-- Here to show message -->
+    </div>
     <script src="https://www.gstatic.com/firebasejs/9.14.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.14.0/firebase-messaging-compat.js"></script>
     <script>
         const firebaseConfig = {
+            // firebaseConfig here
             apiKey: "AIzaSyBGZtqrdfZzIlzL2_6v1Zd72ZVUabX-t8A",
             authDomain: "democoding-60b0b.firebaseapp.com",
             projectId: "democoding-60b0b",
@@ -26,28 +25,36 @@
             appId: "1:747547245786:web:c47053fb20a13cf0f479e3",
             measurementId: "G-B0LWWE0RHH"
         };
-        const app = firebase.initializeApp(firebaseConfig);
+        const app = firebase.initializeApp(firebaseConfig)
         const messaging = firebase.messaging();
 
         messaging.getToken({ vapidKey: 'BKCJEiPSH_xhSR5kGFcKfzvLZ2AHoiHa5vnW4NeY8u94rIDTOxMWfU3GGd_hy26BC6e4w4IIhasX3FiZ776w6v4' }).then((currentToken) => {
-            // Handle token retrieval
+            
         });
 
         messaging.onMessage((payload) => {
+            // notification data receive here, use it however you want
+            // keep in mind if message receive here, it will not notify in background
             console.log('Message received. ', payload);
-            const messagesElement = document.getElementsByClassName('message')[0]; // Specify the index 0
+            const messagesElement = document.querySelector('.message');
             const dataHeaderElement = document.createElement('h5');
+            const BodyElement = document.createElement('h6');
             const dataElement = document.createElement('pre');
             dataElement.style = 'overflow-x:hidden;';
-            dataHeaderElement.textContent = 'Message Received:';
-            // dataElement.textContent = `Title: ${payload.notification.title}\nBody: ${payload.notification.body}`;
             dataElement.textContent = JSON.stringify(payload, null, 2);
+            const parsedData = JSON.parse(dataElement.textContent);
+            const title = parsedData.notification.title;
+            const body = parsedData.notification.body;
+            console.log('Title:', title);
+            console.log('BOdy:', body);
+            dataHeaderElement.textContent = title;
+            BodyElement.textContent = body;
             messagesElement.appendChild(dataHeaderElement);
-            messagesElement.appendChild(dataElement);
+            // messagesElement.appendChild(dataElement);
+            messagesElement.appendChild(BodyElement);
         });
+
     </script>
 </body>
 
 </html>
-
-        
